@@ -3,10 +3,35 @@ package controllers
 import (
 	"github.com/julycw/Jeremiah/models"
 	"log"
+	// "os"
 )
 
 type HomeController struct {
 	BaseController
+}
+
+func (this *HomeController) RootTxt() {
+	// filePath := "root.txt"
+	// var buf []byte = make([]byte, 255)
+	// var fileBody []byte = make([]byte, 0)
+	// if file, err := os.Open(filePath); err == nil {
+	// 	for {
+	// 		if length, _ := file.Read(buf); length == 0 {
+	// 			break
+	// 		}
+	// 		for _, v := range buf {
+	// 			fileBody = append(fileBody, v)
+	// 		}
+	// 	}
+	// 	file.Close()
+	// } else {
+	// 	log.Println(err.Error())
+	// }
+
+	// this.Ctx.Output.Header("Accept-Ranges", "bytes")
+	// this.Ctx.Output.Header("Content-Type", "txt")
+
+	this.Ctx.ResponseWriter.Write([]byte("29c6bfccf1a70c7dc4d03dd4a0eee904"))
 }
 
 func (this *HomeController) Get() {

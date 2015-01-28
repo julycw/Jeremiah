@@ -14,6 +14,7 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.HomeController{})
+	beego.Router("/root.txt", &controllers.HomeController{}, "get:RootTxt")
 	beego.Router("/home", &controllers.HomeController{})
 	beego.Router("/gallery", &controllers.GalleryController{})
 	beego.Router("/gallery/:id:int", &controllers.GalleryController{}, "get:Detail")

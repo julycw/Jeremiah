@@ -39,11 +39,13 @@
 	</div>
  	<div class="copy-right">
 		<div class="wrap">
-		  	<p class="copy">耶利米 <i id="copyrightsign">©</i> All Rights Reseverd | Power by  <a href="http://weibo.com/u/2703314922" target="_blank">July</a></p><!--  <p class="design"> </p> -->
+		  	<p class="copy">慈溪市耶利米智能科技有限公司 <i id="copyrightsign">©</i> All Rights Reseverd | 浙ICP备1500142 | Power by  <a href="http://weibo.com/u/2703314922" target="_blank">July</a></p><!--  <p class="design"> </p> -->
 	      	<div class="clear"></div>
+	      	<a href="http://webscan.360.cn/index/checkwebsite/url/www.16me.cn"><img border="0" src="http://img.webscan.360.cn/status/pai/hash/6aee8b7837e3280bc6451857a2867a8a"/></a>
 		</div>	
 	</div>
 	<a href="javascript:void(0)" id="goTop" class="uk-button" data-uk-smooth-scroll="" style="display: inline;"><i class="uk-icon-chevron-up"></i></a>
+
 	<script src="/static/js/jquery-1.11.0.min.js"></script>
     <script src="/static/uikit/js/uikit.min.js"></script>
     <script src="/static/js/site.js"></script>
