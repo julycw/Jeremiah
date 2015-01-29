@@ -2,11 +2,17 @@ package mgo_models
 
 import (
 	"errors"
-	"labix.org/v2/mgo"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"reflect"
 )
 
 var sess *mgo.Session = nil
+
+var (
+	ErrorWrongDataType    error = errors.New("Wrong data struct type")
+	ErrorModelIsNotStruct error = errors.New("Model type must be struct")
+)
 
 const (
 	ip     = "localhost"
@@ -20,9 +26,10 @@ type ERPContext struct {
 	db             *mgo.Database
 }
 
-func (this *ERPContext) checkData(data interface{}) bool {
+func (this *ERPContext) giveMeConfidence(data interface{}) bool {
 	t := reflect.TypeOf(data)
-	for t.Kind() == reflect.Ptr {
+	//Pointer、Slice、Array、Channel等类型调用Elem后可获得基本数据类型
+	for t.Kind() == reflect.Ptr || t.Kind() == reflect.Slice {
 		t = t.Elem()
 	}
 
@@ -32,9 +39,9 @@ func (this *ERPContext) checkData(data interface{}) bool {
 
 	return true
 }
-func (this *ERPContext) checkDatas(data []interface{}) bool {
+func (this *ERPContext) giveMeConfidences(data []interface{}) bool {
 	for _, v := range data {
-		if !this.checkData(v) {
+		if !this.giveMeConfidence(v) {
 			return false
 		}
 	}
@@ -42,10 +49,49 @@ func (this *ERPContext) checkDatas(data []interface{}) bool {
 	return true
 }
 
-func (this *ERPContext) Insert(data ...interface{}) error {
+func (this *ERPContext) FindId(id interface{}, result interface{}) error {
+	if !this.giveMeConfidence(result) {
+		return ErrorWrongDataType
+	}
 
-	if !this.checkDatas(data) {
-		return errors.New("Error data struct type")
+	var objectId bson.ObjectId
+	t := reflect.TypeOf(id)
+	if t == reflect.TypeOf(objectId) {
+		objectId = id.(bson.ObjectId)
+	} else if t.Kind() == reflect.String {
+		objectId = bson.ObjectIdHex(id.(string))
+	}
+
+	return this.db.C(this.collectionName).Find(bson.M{"_id": objectId}).One(result)
+}
+
+func (this *ERPContext) Find(selector, results interface{}) error {
+	t := reflect.TypeOf(results)
+	if t.Kind() != reflect.Ptr {
+		return ErrorWrongDataType
+	}
+	t = t.Elem()
+	if t.Kind() != reflect.Slice {
+		return ErrorWrongDataType
+	}
+	if !this.giveMeConfidence(results) {
+		return ErrorWrongDataType
+	}
+
+	return this.db.C(this.collectionName).Find(selector).All(results)
+}
+
+func (this *ERPContext) Update(selector, update interface{}) error {
+	if !this.giveMeConfidence(update) {
+		return ErrorWrongDataType
+	}
+
+	return this.db.C(this.collectionName).Update(selector, update)
+}
+
+func (this *ERPContext) Insert(data ...interface{}) error {
+	if !this.giveMeConfidences(data) {
+		return ErrorWrongDataType
 	}
 
 	return this.db.C(this.collectionName).Insert(data...)
@@ -58,7 +104,7 @@ func GetERPContext(collection string, modelType interface{}) (*ERPContext, error
 	}
 
 	if t.Kind() != reflect.Struct {
-		return nil, errors.New("Unknown model type")
+		return nil, ErrorModelIsNotStruct
 	}
 	return &ERPContext{
 		collectionName: collection,
