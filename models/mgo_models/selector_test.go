@@ -8,7 +8,7 @@ import (
 )
 
 func TestSelectorMaker(t *testing.T) {
-	selectorMaker := New()
+	selectorMaker := NewSelector()
 	selectorMaker.And("title", "hello")
 	selectorMaker.And("price", "$gt", 11)
 	selectorMaker.And([]interface{}{"type", "$in", "小说", "散文", "诗歌"}...)

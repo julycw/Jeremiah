@@ -41,7 +41,7 @@ func (this *SelectorMaker) And(params ...interface{}) *SelectorMaker {
 			switch operation {
 			case "$eq":
 				(*this.selector)[fieldName] = params[1]
-			case "$ne", "$gt", "$lt", "$gte", "$lte":
+			case "$ne", "$gt", "$lt", "$gte", "$lte", "$elemMatch":
 				(*this.selector)[fieldName] = bson.M{operation: params[2]}
 			case "$in", "$nin":
 				(*this.selector)[fieldName] = bson.M{operation: params[2:]}
@@ -65,8 +65,8 @@ func (this *SelectorMaker) Selector() *bson.M {
 	return this.selector
 }
 
-func New() SelectorMaker {
-	return SelectorMaker{
+func NewSelector() *SelectorMaker {
+	return &SelectorMaker{
 		selector: &bson.M{},
 	}
 }
