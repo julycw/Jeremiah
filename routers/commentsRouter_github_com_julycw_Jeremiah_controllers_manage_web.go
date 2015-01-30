@@ -6,6 +6,13 @@ import (
 
 func init() {
 	
+	beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/web:ERPController"] = append(beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/web:ERPController"],
+		beego.ControllerComments{
+			"Add",
+			`/api/manage/web/erp/add`,
+			[]string{"post"},
+			nil})
+
 	beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/web:NewsController"] = append(beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/web:NewsController"],
 		beego.ControllerComments{
 			"GetNewsById",

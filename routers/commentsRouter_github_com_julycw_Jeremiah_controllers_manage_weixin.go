@@ -6,13 +6,6 @@ import (
 
 func init() {
 	
-	beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/weixin:MessageController"] = append(beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/weixin:MessageController"],
-		beego.ControllerComments{
-			"GetMessageList",
-			`/api/manage/weixin/message/getMessageList`,
-			[]string{"post"},
-			nil})
-
 	beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/weixin:FixOrderController"] = append(beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/weixin:FixOrderController"],
 		beego.ControllerComments{
 			"GetOrderNumber",
@@ -59,6 +52,13 @@ func init() {
 		beego.ControllerComments{
 			"GetFollowerById",
 			`/api/manage/weixin/follower/getFollowerById`,
+			[]string{"post"},
+			nil})
+
+	beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/weixin:MessageController"] = append(beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/weixin:MessageController"],
+		beego.ControllerComments{
+			"GetMessageList",
+			`/api/manage/weixin/message/getMessageList`,
 			[]string{"post"},
 			nil})
 

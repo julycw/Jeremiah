@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/julycw/Jeremiah/models/mgo_models"
 	"net/url"
 	"time"
 )
@@ -35,6 +36,7 @@ func init() {
 	orm.RegisterModel(new(Dictionary))
 	orm.RegisterModel(new(Product))
 
+	mgo_models.DialDB("127.0.0.1", "27017")
 	orm.RegisterDataBase("default", "mysql", connstr)
 
 	Orm = orm.NewOrm()

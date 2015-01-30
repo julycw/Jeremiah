@@ -61,11 +61,20 @@ var books []Book = []Book{
 }
 
 func TestGetERPContext(t *testing.T) {
-	ctx, _ := GetERPContext("BookStore", Book{})
+	DialDB("127.0.0.1", "27017")
+	ctx, _ := GetERPContext("jeremiah_test", "BookStore", Book{})
 	if ctx == nil {
 		t.Error("error!")
 	}
 
+	//insert something make sure db exist.
+	books[0].ID_ = bson.NewObjectId()
+	books[0].Number = 0
+
+	//insert
+	if err := ctx.Insert(&books[0]); err != nil {
+		t.Error(err.Error())
+	}
 	//drop
 	if err := ctx.Drop(); err != nil {
 		t.Error(err.Error())
