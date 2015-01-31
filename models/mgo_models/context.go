@@ -183,11 +183,11 @@ func (this *ERPContext) Collection() *mgo.Collection {
 	return this.db.C(this.collectionName)
 }
 
-func GetERPContext(database, collection string, modelType interface{}) (*ERPContext, error) {
+func GetERPContext(database, collection string, dataModel interface{}) (*ERPContext, error) {
 	if sess == nil {
 		return nil, errors.New("Get context before register mongodb, please call DialDB() first.")
 	}
-	t := reflect.TypeOf(modelType)
+	t := reflect.TypeOf(dataModel)
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}

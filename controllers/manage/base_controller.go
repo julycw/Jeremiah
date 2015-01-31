@@ -36,6 +36,7 @@ func (this *BaseController) Prepare() {
 	}
 	if this.IsAjax() {
 		this.Data["json"] = "No access!"
+		this.ServeJson()
 	} else {
 		this.Redirect(fmt.Sprintf("/manage/login?redirect=%s", this.Ctx.Request.URL.String()), 302)
 	}
@@ -85,6 +86,14 @@ func (this *BaseController) CheckAvaliable(avaliables string) {
 	}
 
 	this.StopRun()
+}
+
+func (this *BaseController) ResponseError(err error) {
+	if this.IsAjax() {
+		this.Data["json"] = &err
+		this.ServeJson()
+		this.StopRun()
+	}
 }
 
 func (this *BaseController) GetPageHeader() string {

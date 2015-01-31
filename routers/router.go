@@ -72,4 +72,5 @@ func init() {
 	beego.Include(&weixin_router.WeixinPageController{})
 	beego.Include(&web.NewsController{})
 	beego.Include(&web.ProductController{})
+	beego.Include(&web.ERPController{})
 }

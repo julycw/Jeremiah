@@ -168,6 +168,7 @@
     <script src="/static/js/jquery-1.11.0.min.js"></script>
     <script src="/static/uikit/js/uikit.min.js"></script>
     <script src="/static/js/site.js"></script>
+    <script src="/static/js/utils.js"></script>
     {{.LayoutFooter}}
 </body>
 
