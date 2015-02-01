@@ -25,12 +25,14 @@ func ConvertGBKToUTF8(str string) string {
 }
 
 func ParseJD(url string) (interface{}, error) {
+	url = safeUrl(url)
 	content, code := readContent(url)
 	if code != 200 {
 		return nil, errors.New(fmt.Sprintf("Error:%d\n", code))
 	}
 
 	var computer mgo_models.Computer
+	computer.ModelUrl = url
 	//匹配概览数据列表
 	ptnContentInfoList := regexp.MustCompile(`(?s)<ul id="parameter2" class="p-parameter-list">(.*?)</ul>`)
 	//匹配概览数据
@@ -208,10 +210,14 @@ func ParseJD(url string) (interface{}, error) {
 	return computer, nil
 }
 
-func readContent(url string) (content string, code int) {
+func safeUrl(url string) string {
 	if !strings.HasPrefix(url, "http://") {
 		url = "http://" + url
 	}
+	return url
+}
+
+func readContent(url string) (content string, code int) {
 	response, err := http.Get(url)
 	if err != nil {
 		return "", -100

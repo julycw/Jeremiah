@@ -41,7 +41,7 @@ func (this *SelectorMaker) And(params ...interface{}) *SelectorMaker {
 			switch operation {
 			case "$eq":
 				(*this.selector)[fieldName] = params[1]
-			case "$ne", "$gt", "$lt", "$gte", "$lte", "$elemMatch":
+			case "$ne", "$gt", "$lt", "$gte", "$lte":
 				(*this.selector)[fieldName] = bson.M{operation: params[2]}
 			case "$in", "$nin":
 				(*this.selector)[fieldName] = bson.M{operation: params[2:]}
@@ -53,6 +53,9 @@ func (this *SelectorMaker) And(params ...interface{}) *SelectorMaker {
 				 * and 'u' to make \w, \W, and similar match unicode.
 				 */
 				(*this.selector)[fieldName] = bson.M{operation: bson.RegEx{params[2].(string), "u"}}
+			case "$elemMatch":
+				(*this.selector)[fieldName] = bson.M{operation: bson.M{"$eq": params[2]}}
+
 			}
 		}
 

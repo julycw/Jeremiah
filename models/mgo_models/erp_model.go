@@ -61,4 +61,5 @@ type Computer struct {
 	Feature string `bson:"feature" id:"feature" form:"feature,text,特性"`
 
 	PictureUrls []string `bson:"pictureUrls" id:"pictureUrls" form:"pictureUrls,text,图片列表"`
+	ModelUrl    string   `bson:"modelUrl" id:"modelUrl" form:"modelUrl,hidden,网址"`
 }

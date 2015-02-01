@@ -124,7 +124,7 @@ func TestGetERPContext(t *testing.T) {
 
 	//mult-conditions searching
 	selector := NewSelector()
-	selector.And("tag", "$elemMatch", bson.M{"$eq": "NBA"}).And("price", "$gte", 30.0)
+	selector.And("tag", "$elemMatch", "NBA").And("price", "$gte", 30.0)
 
 	if count := ctx.Count(selector.Selector()); count != 2 {
 		t.Errorf("Count should be 2,but return %d", count)

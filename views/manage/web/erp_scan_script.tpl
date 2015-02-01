@@ -11,7 +11,7 @@
 			// var computerData = $("#scanForm").serializeObject();
 			var computerData = serializeForm("scanForm");
 			$.post("/api/manage/web/erp/add",computerData,function(data){
-				console.info(data);
+			 	window.location.href="/manage/web/erp"; 
 			});
 		});
 		$("#btnClose").on("click",function(){

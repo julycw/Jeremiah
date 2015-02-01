@@ -27,6 +27,9 @@
                     <div class="uk-dropdown uk-dropdown-navbar">
                         <ul class="uk-nav uk-nav-navbar">
                             <li>
+                                <a href="/manage/web/erp">ERP</a>
+                            </li>
+                            <li>
                                 <a href="/manage/web/news">文章列表</a>
                             </li>
                             <li>
@@ -109,6 +112,9 @@
                     <li class="uk-nav-header">细分功能</li>
                     <li class="uk-parent"><a href="#"><i class="uk-icon-wrench"></i> 网站内容管理</a>
                         <ul class="uk-nav-sub">
+                            <li>
+                                <a href="/manage/web/erp">ERP</a>
+                            </li>
                             <li>
                                 <a href="/manage/web/news">文章列表</a>
                             </li>

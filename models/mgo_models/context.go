@@ -31,7 +31,7 @@ type ERPContext struct {
 func (this *ERPContext) giveMeConfidence(data interface{}) bool {
 	t := reflect.TypeOf(data)
 	//Pointer、Slice、Array、Channel等类型调用Elem后可获得基本数据类型
-	for t.Kind() == reflect.Ptr || t.Kind() == reflect.Slice {
+	for t.Kind() == reflect.Ptr || t.Kind() == reflect.Slice || t.Kind() == reflect.Map {
 		t = t.Elem()
 	}
 
