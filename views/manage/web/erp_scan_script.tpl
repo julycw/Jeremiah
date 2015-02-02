@@ -4,8 +4,10 @@
 		$("#scanForm div").addClass("uk-form-row");
 		$("#scanForm div label").addClass("uk-form-label");
 		$("#scanForm div input").addClass("uk-width-1-1").wrap("<div class=\"uk-form-controls\"></div>");
-		//数据库ID不允许修改
+		//不允许修改的字段
 		$("#idStr").attr("readonly","true");
+		$("#scanSite").attr("readonly","true");
+		$("#jdNumber").attr("readonly","true");
 		//事件绑定
 		$("#btnSubmit").on("click",function(){
 			// var computerData = $("#scanForm").serializeObject();

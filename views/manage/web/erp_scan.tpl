@@ -1,5 +1,5 @@
 <div>
-    <h4 class="tm-article-subtitle">从网页扫描数据</h4>
+    <h4 class="tm-article-subtitle">从网页扫描数据<a style="margin-left: 10px;font-size: 12px;color: darkblue;font-weight: bold;" href="javascript:window.open('http://{{.SiteAddr}}{{.SitePort}}/manage/web/erp/scan?url='+encodeURIComponent(window.location.href));" data-uk-tooltip title="拖拽到书签栏">快捷方式</a></h4>
     <form class="uk-form">
 		<input id="scanUrl" name="url" type="text" value="{{.url}}" placeholder="http://" class="uk-margin-small-top uk-width-1-1 uk-width-medium-1-2 uk-width-large-1-2">
 		<button class="uk-button uk-button-success uk-margin-small-top"><strong>Go!</strong></button>

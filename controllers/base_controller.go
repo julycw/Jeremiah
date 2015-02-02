@@ -11,6 +11,8 @@ type BaseController struct {
 func (this *BaseController) Prepare() {
 	this.Layout = "web/layout.tpl"
 	this.LayoutSections = make(map[string]string)
+	this.Data["SiteAddr"] = beego.AppConfig.String("webaddr")
+	this.Data["SitePort"] = beego.AppConfig.String("httpport")
 }
 
 func (this *BaseController) Get() {

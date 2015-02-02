@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"github.com/julycw/Jeremiah/controllers/manage"
 	"github.com/julycw/Jeremiah/models/mgo_models"
-	"github.com/julycw/Jeremiah/module"
+	"github.com/julycw/Jeremiah/module/parser"
 	"gopkg.in/mgo.v2/bson"
 	"log"
-	"strings"
 )
 
 type ERPController struct {
@@ -24,9 +23,15 @@ func (this *ERPController) Get() {
 		log.Println(err.Error())
 		this.ResponseError(err)
 	} else {
+		count := ctx.Count(nil)
+		results := make([]mgo_models.Computer, count)
+		if findErr := ctx.Find(nil, &results); findErr != nil {
+			log.Println(err.Error())
+		} else {
+			this.Data["List"] = &results
+		}
 		this.Data["Count"] = ctx.Count(nil)
 	}
-
 }
 
 func (this *ERPController) Scan() {
@@ -35,23 +40,22 @@ func (this *ERPController) Scan() {
 	this.LayoutSections["LayoutFooter"] = "manage/web/erp_scan_script.tpl"
 
 	url := this.GetString("url")
-	this.Data["url"] = url
 
 	var computer mgo_models.Computer
-	if strings.Contains(url, "jd.com") {
-		if ret, err := module.ParseJD(url); err != nil {
-			this.Data["Error"] = fmt.Sprintf("%s%s", err.Error(), " 请手动录入")
+	if url != "" {
+		this.Data["url"] = url
+		if ret, err := parser.Parse(url); err != nil {
+			this.Data["Error"] = fmt.Sprintf("%s", err.Error())
 			computer.ID = bson.NewObjectId()
 			computer.IDStr = computer.ID.Hex()
 		} else {
 			computer = ret.(mgo_models.Computer)
-			if this.checkExsitJDNumber(computer.JDNumber) {
-				this.Data["Warning"] = fmt.Sprintf("京东编号为%s的商品已存在，如果提交，将对数据进行覆盖", computer.JDNumber)
+			if this.checkExsit(computer.Code) {
+				this.Data["Warning"] = fmt.Sprintf("编号为%s的商品已存在，如果提交，将对数据进行覆盖", computer.Code)
 			}
 		}
-	} else {
-		this.Data["Error"] = "暂不支持扫描非京东数据，请手动录入"
 	}
+
 	this.Data["Form"] = &computer
 }
 
@@ -67,12 +71,12 @@ func (this *ERPController) Add() {
 		this.ResponseError(err)
 	} else {
 
-		if this.checkExsitJDNumber(computer.JDNumber) { //update
+		if this.checkExsit(computer.Code) { //update
 			//无需更改ID
 			computer.ID = bson.ObjectId("")
 			computer.IDStr = ""
 
-			updateErr := ctx.Update(mgo_models.NewSelector().And("jdNumber", computer.JDNumber).Selector(), &computer)
+			updateErr := ctx.Update(mgo_models.NewSelector().And("code", computer.Code).Selector(), &computer)
 			if updateErr != nil {
 				log.Println(updateErr.Error())
 				this.ResponseError(updateErr)
@@ -98,18 +102,17 @@ func (this *ERPController) Add() {
 	this.ServeJson()
 }
 
-func (this *ERPController) checkExsitJDNumber(jdNumber string) bool {
+func (this *ERPController) checkExsit(code string) bool {
 	exsits := false
 	if ctx, err := mgo_models.GetERPContext("jeremiah", "computer", mgo_models.Computer{}); err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 	} else {
-		selector := mgo_models.NewSelector().And("jdNumber", jdNumber)
+		selector := mgo_models.NewSelector().And("code", code)
 		results := make([]mgo_models.Computer, 0)
 		if findError := ctx.Find(selector.Selector(), &results); findError != nil {
-			fmt.Println(findError.Error())
+			log.Println(findError.Error())
 		} else {
 			if len(results) >= 1 {
-				fmt.Println(len(results))
 				exsits = true
 			}
 		}

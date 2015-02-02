@@ -67,7 +67,7 @@
                                         <p>订单号: <b id="orderNumber">{{.orderNumber}}</b> <a id="btnOrderRefresh" href="javascript:void(0);"><i class="uk-icon-refresh"></i></a></p>
                                         <div class="uk-panel" id="panel-code">
                                             <span style="display:inline-block;min-width:200px;min-height:200px;">
-                                            <img id="orderCodeImage" src="/static/img/logo.jpg" mask-src="http://qr.liantu.com/api.php?text=http://{{.SiteIp}}/api/manage/weixin/fix/scanFixOrder?order=" orderid="{{.orderNumber}}"/>
+                                            <img id="orderCodeImage" src="/static/img/logo.jpg" mask-src="http://qr.liantu.com/api.php?text=http://{{.SiteAddr}}{{.SitePort}}/api/manage/weixin/fix/scanFixOrder?order=" orderid="{{.orderNumber}}"/>
                                             </span>
                                             <p>
                                                 <a href="javascript:void(0);" id="btnBindUser" class="uk-button">绑定用户</a>

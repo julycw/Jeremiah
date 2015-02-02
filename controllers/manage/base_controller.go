@@ -7,6 +7,7 @@ import (
 	"github.com/astaxie/beego/session"
 	"github.com/julycw/Jeremiah/models"
 	"log"
+	"net/url"
 	"strconv"
 	"strings"
 )
@@ -22,7 +23,10 @@ type BaseController struct {
 
 func (this *BaseController) Prepare() {
 	this.CheckAvaliable("登陆")
-	this.Data["SiteIp"] = beego.AppConfig.String("siteip")
+	this.Data["SiteAddr"] = beego.AppConfig.String("webaddr")
+	if beego.AppConfig.String("httpport") != "" {
+		this.Data["SitePort"] = fmt.Sprintf(":%s", beego.AppConfig.String("httpport"))
+	}
 	sess, _ := globalSessions.SessionStart(this.Ctx.ResponseWriter, this.Ctx.Request)
 	defer sess.SessionRelease(this.Ctx.ResponseWriter)
 	if username := sess.Get("username"); username != nil {
@@ -38,7 +42,8 @@ func (this *BaseController) Prepare() {
 		this.Data["json"] = "No access!"
 		this.ServeJson()
 	} else {
-		this.Redirect(fmt.Sprintf("/manage/login?redirect=%s", this.Ctx.Request.URL.String()), 302)
+		fmt.Println(url.QueryEscape(this.Ctx.Request.URL.String()))
+		this.Redirect(fmt.Sprintf("/manage/login?redirect=%s", url.QueryEscape(this.Ctx.Request.URL.String())), 302)
 	}
 	this.StopRun()
 }

@@ -1,4 +1,4 @@
-package module
+package parser
 
 import (
 	"code.google.com/p/mahonia"
@@ -13,15 +13,115 @@ import (
 	"strings"
 )
 
+const (
+	SITECODE_JD = iota + 1
+	SITECODE_TM
+)
+
 var (
 	ptnBrTag   = regexp.MustCompile(`<br>`)
 	ptnHTMLTag = regexp.MustCompile(`(?s)</?.*?>`)
 	ptnSpace   = regexp.MustCompile(`(^\s+)|( )`)
+	ptnNbsp    = regexp.MustCompile(`&nbsp;`)
 )
 
 func ConvertGBKToUTF8(str string) string {
 	enc := mahonia.NewDecoder("gbk")
 	return enc.ConvertString(str)
+}
+
+func Parse(url string) (interface{}, error) {
+	if strings.Contains(url, "jd.com") {
+		return ParseJD(url)
+	}
+	if strings.Contains(url, "tmall.com") {
+		return ParseTmall(url)
+	}
+
+	return nil, errors.New("暂不支持对该网站数据进行扫描，请手动录入")
+}
+
+func ParseTmall(url string) (interface{}, error) {
+	url = safeUrl(url)
+	content, code := readContent(url)
+	if code != 200 {
+		return nil, errors.New(fmt.Sprintf("Error:%d\n", code))
+	}
+
+	var computer mgo_models.Computer
+	computer.ModelUrl = url
+	computer.ScanSite = "tmall.com"
+	//匹配商品编号
+	ptnContentInfoSKU := regexp.MustCompile(`itemId:"(.*?)"`)
+	//匹配商品原价
+	ptnContentInfoPrice := regexp.MustCompile(`"defaultItemPrice":"(.*?)"`)
+	//匹配概览数据列表
+	ptnContentInfoList := regexp.MustCompile(`(?s)<ul id="J_AttrUL">(.*?)</ul>`)
+	//匹配概览数据
+	ptnContentInfoValue := regexp.MustCompile(`<li.*?title="(.*?)">(.*?)</li>`)
+
+	//匹配商品编号
+	matchSKU := ptnContentInfoSKU.FindStringSubmatch(content)
+	if matchSKU != nil {
+		computer.Code = fmt.Sprintf("%02d%s", SITECODE_TM, matchSKU[1])
+		computer.JDNumber = matchSKU[1]
+	}
+	//匹配商品原价
+	matchPrice := ptnContentInfoPrice.FindStringSubmatch(content)
+	if matchPrice != nil {
+		fmt.Println(matchPrice[1])
+		temp, _ := strconv.ParseFloat(matchPrice[1], 32)
+		computer.Price = float32(temp)
+	}
+
+	//匹配概览数据列
+	matchList := ptnContentInfoList.FindStringSubmatch(content)
+	if matchList != nil {
+		listContent := matchList[1]
+		matcheSections := ptnContentInfoValue.FindAllStringSubmatch(listContent, -1)
+		for _, section := range matcheSections {
+			splitIndex := strings.Index(section[2], ":")
+			if splitIndex < 0 {
+				splitIndex = strings.Index(section[2], "：")
+			}
+			switch strings.TrimSpace(strings.TrimSpace(section[2][:splitIndex])) {
+			case "产品名称":
+				computer.Name = section[1]
+			case "品牌":
+				computer.Brand = section[1]
+			case "屏幕尺寸":
+				computer.ScreenSize = section[1]
+			case "系列":
+				computer.Series = section[1]
+			case "内存容量":
+				computer.MemorySize = section[1]
+			case "内存类型":
+				computer.MemoryType = section[1]
+			case "硬盘容量":
+				computer.DiskSize = section[1]
+			case "硬盘接口":
+				computer.DiskType = section[1]
+			case "硬盘转速":
+				computer.DiskSpeed = section[1]
+			case "显存容量":
+				computer.GraphicsMemorySize = section[1]
+			case "光驱类型":
+				computer.CDRom = section[1]
+			case "操作系统":
+				computer.OS = section[1]
+			}
+		}
+	}
+
+	if matchList == nil && matchSKU == nil {
+		return nil, errors.New("无法从该页面获取信息")
+	}
+
+	computer.ID = bson.NewObjectId()
+	computer.IDStr = computer.ID.Hex()
+	computer.ModelUrl = fmt.Sprintf("http://detail.tmall.com/item.htm?id=%s", computer.JDNumber)
+
+	return computer, nil
 }
 
 func ParseJD(url string) (interface{}, error) {
@@ -33,6 +133,7 @@ func ParseJD(url string) (interface{}, error) {
 
 	var computer mgo_models.Computer
 	computer.ModelUrl = url
+	computer.ScanSite = "jd.com"
 	//匹配概览数据列表
 	ptnContentInfoList := regexp.MustCompile(`(?s)<ul id="parameter2" class="p-parameter-list">(.*?)</ul>`)
 	//匹配概览数据
@@ -61,6 +162,7 @@ func ParseJD(url string) (interface{}, error) {
 			case "电脑类别":
 				computer.Type = section[1]
 			case "商品编号":
+				computer.Code = fmt.Sprintf("%02d%s", SITECODE_JD, section[1])
 				computer.JDNumber = section[1]
 			case "显示器尺寸":
 				computer.ScreenSize = section[1]
@@ -229,7 +331,8 @@ func readContent(url string) (content string, code int) {
 		return "", -100
 	}
 	content = ConvertGBKToUTF8(string(body))
-	content = ptnBrTag.ReplaceAllString(content, "\r\n")
+	content = ptnBrTag.ReplaceAllString(content, " ")
+	content = ptnNbsp.ReplaceAllString(content, "")
 	code = response.StatusCode
 	return
 }

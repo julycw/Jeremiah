@@ -7,8 +7,9 @@ import (
 type Computer struct {
 	ID       bson.ObjectId `bson:"_id" form:"-"`
 	IDStr    string        `bson:"idStr" id:"idStr" form:"idStr,text,数据库自生成编号"`
-	Code     string        `bson:"code" id:"code" form:"code,text,条形码"`
+	Code     string        `bson:"code" id:"code" form:"code,text,编号/条形码/唯一码"`
 	JDNumber string        `bson:"jdNumber" id:"jdNumber" form:"jdNumber,text,京东商品编号"`
+	ScanSite string        `bson:"scanSite" id:"scanSite" form:"scanSite,text,数据来源网站"`
 
 	PurchasePriceIncludTax  float32 `bson:"purchasePriceIncludTax" id:"purchasePriceIncludTax" form:"purchasePriceIncludTax,text,含税进货价(元)"`
 	PurchasePriceWithoutTax float32 `bson:"purchasePriceWithoutTax" id:"purchasePriceWithoutTax" form:"purchasePriceWithoutTax,text,不含税进货价(元)"`
@@ -61,5 +62,5 @@ type Computer struct {
 	Feature string `bson:"feature" id:"feature" form:"feature,text,特性"`
 
 	PictureUrls []string `bson:"pictureUrls" id:"pictureUrls" form:"pictureUrls,text,图片列表"`
-	ModelUrl    string   `bson:"modelUrl" id:"modelUrl" form:"modelUrl,hidden,网址"`
+	ModelUrl    string   `bson:"modelUrl" id:"modelUrl" form:"modelUrl,text,访问网址"`
 }
