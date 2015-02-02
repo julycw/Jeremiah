@@ -64,7 +64,7 @@ func ParseTmall(url string) (interface{}, error) {
 	matchSKU := ptnContentInfoSKU.FindStringSubmatch(content)
 	if matchSKU != nil {
 		computer.Code = fmt.Sprintf("%02d%s", SITECODE_TM, matchSKU[1])
-		computer.JDNumber = matchSKU[1]
+		computer.SKU = matchSKU[1]
 	}
 	//匹配商品原价
 	matchPrice := ptnContentInfoPrice.FindStringSubmatch(content)
@@ -119,7 +119,7 @@ func ParseTmall(url string) (interface{}, error) {
 
 	computer.ID = bson.NewObjectId()
 	computer.IDStr = computer.ID.Hex()
-	computer.ModelUrl = fmt.Sprintf("http://detail.tmall.com/item.htm?id=%s", computer.JDNumber)
+	computer.ModelUrl = fmt.Sprintf("http://detail.tmall.com/item.htm?id=%s", computer.SKU)
 
 	return computer, nil
 }
@@ -163,7 +163,7 @@ func ParseJD(url string) (interface{}, error) {
 				computer.Type = section[1]
 			case "商品编号":
 				computer.Code = fmt.Sprintf("%02d%s", SITECODE_JD, section[1])
-				computer.JDNumber = section[1]
+				computer.SKU = section[1]
 			case "显示器尺寸":
 				computer.ScreenSize = section[1]
 			case "显卡":
@@ -297,7 +297,7 @@ func ParseJD(url string) (interface{}, error) {
 	computer.IDStr = computer.ID.Hex()
 
 	//获取价格
-	urlGetPrice := fmt.Sprintf("http://p.3.cn/prices/get?skuid=J_%s", computer.JDNumber)
+	urlGetPrice := fmt.Sprintf("http://p.3.cn/prices/get?skuid=J_%s", computer.SKU)
 	if c, code := readContent(urlGetPrice); code == 200 {
 		ptnGetPrice := regexp.MustCompile(`"p":"(.*)","m":"(.*)"`)
 		matchPrice := ptnGetPrice.FindStringSubmatch(c)

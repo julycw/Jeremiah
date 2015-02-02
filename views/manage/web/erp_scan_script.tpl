@@ -7,7 +7,7 @@
 		//不允许修改的字段
 		$("#idStr").attr("readonly","true");
 		$("#scanSite").attr("readonly","true");
-		$("#jdNumber").attr("readonly","true");
+		$("#sku").attr("readonly","true");
 		//事件绑定
 		$("#btnSubmit").on("click",function(){
 			// var computerData = $("#scanForm").serializeObject();
