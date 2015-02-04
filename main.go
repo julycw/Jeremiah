@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/julycw/Jeremiah/models"
 	_ "github.com/julycw/Jeremiah/routers"
+	"log"
 	"reflect"
 	"strings"
 )
@@ -66,4 +67,8 @@ func main() {
 	beego.EnableAdmin = true
 	beego.AdminHttpPort = 8088
 	beego.Run()
+}
+
+func init() {
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
 }

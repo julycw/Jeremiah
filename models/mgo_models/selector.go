@@ -4,6 +4,7 @@ import (
 	// "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	// "reflect"
+	"strings"
 )
 
 // type Condition struct {
@@ -38,11 +39,19 @@ func (this *SelectorMaker) And(params ...interface{}) *SelectorMaker {
 			(*this.selector)[fieldName] = params[1]
 		} else if lenParams >= 3 {
 			operation = params[1].(string)
+			if !strings.HasPrefix(operation, "$") {
+				operation = "$" + operation
+			}
 			switch operation {
 			case "$eq":
 				(*this.selector)[fieldName] = params[1]
 			case "$ne", "$gt", "$lt", "$gte", "$lte":
-				(*this.selector)[fieldName] = bson.M{operation: params[2]}
+				if m, has := (*this.selector)[fieldName]; has {
+					m.(bson.M)[operation] = params[2]
+					(*this.selector)[fieldName] = m
+				} else {
+					(*this.selector)[fieldName] = bson.M{operation: params[2]}
+				}
 			case "$in", "$nin":
 				(*this.selector)[fieldName] = bson.M{operation: params[2:]}
 			case "$regex":
@@ -52,10 +61,11 @@ func (this *SelectorMaker) And(params ...interface{}) *SelectorMaker {
 				 * and similar be locale-dependent, 's' for dot-all mode (a '.' matches everything),
 				 * and 'u' to make \w, \W, and similar match unicode.
 				 */
-				(*this.selector)[fieldName] = bson.M{operation: bson.RegEx{params[2].(string), "u"}}
+				(*this.selector)[fieldName] = bson.M{operation: bson.RegEx{params[2].(string), "iu"}}
 			case "$elemMatch":
 				(*this.selector)[fieldName] = bson.M{operation: bson.M{"$eq": params[2]}}
-
+			default:
+				(*this.selector)[fieldName] = bson.M{operation: params[2]}
 			}
 		}
 

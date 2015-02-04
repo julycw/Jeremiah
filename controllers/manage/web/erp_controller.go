@@ -1,6 +1,7 @@
 package web
 
 import (
+	// "encoding/json"
 	"fmt"
 	"github.com/julycw/Jeremiah/controllers/manage"
 	"github.com/julycw/Jeremiah/models/mgo_models"
@@ -13,7 +14,7 @@ type ERPController struct {
 	manage.BaseController
 }
 
-func (this *ERPController) Get() {
+func (this *ERPController) Index() {
 	// this.CheckAvaliable("文章管理")
 	this.TplNames = "manage/web/erp.tpl"
 	this.LayoutSections["LayoutHeader"] = "manage/web/erp_header.tpl"
@@ -23,13 +24,6 @@ func (this *ERPController) Get() {
 		log.Println(err.Error())
 		this.ResponseError(err)
 	} else {
-		count := ctx.Count(nil)
-		results := make([]mgo_models.Computer, count)
-		if findErr := ctx.Find(nil, &results); findErr != nil {
-			log.Println(err.Error())
-		} else {
-			this.Data["List"] = &results
-		}
 		this.Data["Count"] = ctx.Count(nil)
 	}
 }
@@ -59,7 +53,58 @@ func (this *ERPController) Scan() {
 	this.Data["Form"] = &computer
 }
 
-// @router /api/manage/web/erp/add [post]
+// @router /api/manage/web/erp [get]
+func (this *ERPController) Get() {
+	selector := mgo_models.NewSelector()
+	model := this.GetString("model")
+	if model != "" && model != "all" {
+		selector.And("model", "regex", model)
+	}
+	priceMin, _ := this.GetInt("suggestPriceMin")
+	if priceMin >= 0 {
+		selector.And("suggestPrice", "gte", priceMin)
+	}
+	priceMax, _ := this.GetInt("suggestPriceMax")
+	if priceMax >= 0 {
+		selector.And("suggestPrice", "lte", priceMax)
+	}
+	cpu := this.GetString("cpu")
+	if cpu != "" && cpu != "all" {
+		selector.And("cpuModel", "regex", cpu)
+	}
+	graphic := this.GetString("graphic")
+	if graphic != "" && graphic != "all" {
+		selector.And("graphicsMemorySize", "regex", graphic)
+	}
+	memory := this.GetString("memory")
+	if memory != "" && memory != "all" {
+		selector.And("memorySize", "regex", memory)
+	}
+	disk := this.GetString("disk")
+	if disk != "" && disk != "all" {
+		selector.And("diskSize", "regex", disk)
+	}
+	os := this.GetString("os")
+	if os != "" && os != "all" {
+		selector.And("os", "regex", os)
+	}
+
+	if ctx, err := mgo_models.GetERPContext("jeremiah", "computer", mgo_models.Computer{}); err != nil {
+		log.Println(err.Error())
+	} else {
+		count := ctx.Count(selector.Selector())
+		results := make([]mgo_models.Computer, count)
+		if findErr := ctx.Find(selector.Selector(), &results); findErr != nil {
+			log.Println(findErr.Error())
+		} else {
+			this.Data["json"] = &results
+		}
+	}
+
+	this.ServeJson()
+}
+
+// @router /api/manage/web/erp [post]
 func (this *ERPController) Add() {
 	computer := mgo_models.Computer{}
 	if err := this.ParseForm(&computer); err != nil {

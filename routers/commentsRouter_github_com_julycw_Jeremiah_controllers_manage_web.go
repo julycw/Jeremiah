@@ -8,8 +8,15 @@ func init() {
 	
 	beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/web:ERPController"] = append(beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/web:ERPController"],
 		beego.ControllerComments{
+			"Get",
+			`/api/manage/web/erp`,
+			[]string{"get"},
+			nil})
+
+	beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/web:ERPController"] = append(beego.GlobalControllerRouter["github.com/julycw/Jeremiah/controllers/manage/web:ERPController"],
+		beego.ControllerComments{
 			"Add",
-			`/api/manage/web/erp/add`,
+			`/api/manage/web/erp`,
 			[]string{"post"},
 			nil})
 

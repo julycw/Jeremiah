@@ -57,7 +57,7 @@ func init() {
 	beego.Router("/manage/web/product/add", &web.ProductController{}, "post:Add")
 	beego.Router("/manage/web/product/modify", &web.ProductController{}, "post:Modify")
 	beego.Router("/manage/web/product/delete", &web.ProductController{})
-	beego.Router("/manage/web/erp", &web.ERPController{})
+	beego.Router("/manage/web/erp", &web.ERPController{}, "get:Index")
 	beego.Router("/manage/web/erp/scan", &web.ERPController{}, "get:Scan")
 
 	beego.Include(&basic.OptionController{})

@@ -12,7 +12,7 @@
 		$("#btnSubmit").on("click",function(){
 			// var computerData = $("#scanForm").serializeObject();
 			var computerData = serializeForm("scanForm");
-			$.post("/api/manage/web/erp/add",computerData,function(data){
+			$.post("/api/manage/web/erp",computerData,function(data){
 			 	window.location.href="/manage/web/erp"; 
 			});
 		});

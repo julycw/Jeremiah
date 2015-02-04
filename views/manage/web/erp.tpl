@@ -1,49 +1,195 @@
-
-{{if .List}}
 <div>
-<h3 class="tm-article-subtitle">筛选</h3>
-<form class="uk-form" method="get">
-	<div data-uk-margin>
-		<div class="uk-width-1-1 uk-width-large-1-1">
-			<label for="suggest-price-min" class="uk-width-1-1 uk-width-large-1-2">售价(￥):</label>
-	        <input id="suggest-price-min" type="number" class="uk-form-small uk-form-width-mini" value="1000" min="0" step="50"> ~ 
-	        <input id="suggest-price-max" type="number" class="uk-form-small uk-form-width-mini" value="8000" max="10000" step="50">
-		</div>
-	</div>
-	<div data-uk-margin>
-    </div>
-	<div data-uk-margin>
-        <label for="model" class="uk-width-min-1-1">型号:</label> <input type="text" id="model" class="uk-form-small">
-    </div>
-	<div data-uk-margin>
-        <label for="graphics-model">显卡:</label> <input type="text" id="graphics-model" class="uk-form-small">
-    </div>
-	<div data-uk-margin>
-		<label for="cpu-model">CPU:</label> 
-        <select id="cpu-model" class="uk-form-small">
-            <option selected="selected">全部</option>
-            <option value="i3">i3</option>
-            <option value="i5">i5</option>
-            <option value="i7">i7</option>
-        </select>
-        <label for="memory-size">内存:</label> 
-        <select id="memory-size" class="uk-form-small">
-            <option selected="selected">全部</option>
-            <option value="2GB">2GB</option>
-            <option value="4GB">4GB</option>
-            <option value="8GB">8GB</option>
-            <option value="16GB">16GB</option>
-        </select>
-        <label for="disk-size">硬盘:</label> 
-        <select id="disk-size" class="uk-form-small">
-            <option selected="selected">全部</option>
-            <option value="500GB">500GB</option>
-            <option value="1TB">1TB</option>
-        </select>
-	</div>
-	<br/> 
-	<button href="/manage/web/erp" class="uk-button uk-button-small">查询</button>
-</form>
+    <h3 class="tm-article-subtitle">筛选</h3>
+    <form class="uk-form" id="search-form">
+        <div class="uk-grid">
+            <div class="uk-width-1-1 uk-width-large-1-2">
+                <label for="model">型号:</label>
+                <input id="model" name="model" type="text" style="width:100%;"></input>
+            </div>
+        </div>
+        <div class="uk-grid" style="margin-top:0;">
+            <div class="uk-width-1-1 uk-width-large-1-2">
+                <label for="suggest-price-min">建议售价:</label>
+                <div class="uk-grid">
+                    <div class="uk-width-1-2" >
+                        <input id="suggest-price-min" name="suggestPriceMin" style="width:100%;" type="number" value="0" min="0" step="50"></input>
+                    </div>
+                    <div class="uk-width-1-2" >
+                        <input name="suggestPriceMax" type="number" style="width:100%;" value="15000" min="0" step="50"></input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="uk-grid" style="margin-top:0;">
+            <div class="uk-width-1-1 uk-width-large-1-2">
+                <div class="uk-overflow-container">
+                    <table class="uk-table uk-table-condensed">
+                        <thead>
+                            <tr>
+                                <th>CPU</th>
+                                <th></th>
+                                <th>显卡</th>
+                                <th>内存</th>
+                                <th>硬盘</th>
+                                <th>系统</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label>任意</label><input type="radio" name="cpu" value="all" checked/>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <label>任意</label><input type="radio" name="graphic" value="all" checked/>
+                                </td>
+                                <td>
+                                    <label>任意</label><input type="radio" name="memory" value="all" checked/>
+                                </td>
+                                <td>
+                                    <label>任意</label><input type="radio" name="disk" value="all" checked/>
+                                </td>
+                                <td>
+                                    <label>任意</label><input type="radio" name="os" value="all" checked/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Intel Core i3</label><input type="radio" name="cpu" value="i3"/>
+                                </td>
+                                <td>
+                                    <label>AMD E1</label><input type="radio" name="cpu" value="E1"/>
+                                </td>
+                                <td>
+                                    <label>512M</label><input type="radio"  name="graphic" value="512M"/>
+                                </td>
+                                <td>
+                                    <label>2G</label><input type="radio" name="memory" value="2G"/>
+                                </td>
+                                <td>
+                                    <label>320G</label><input type="radio" name="disk" value="320G"/>
+                                </td>
+                                <td>
+                                    <label>Win7</label><input type="radio" name="os" value="Win7"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Intel Core i5</label><input type="radio" name="cpu" value="i5"/>
+                                </td>
+                                <td>
+                                    <label>AMD sempron</label><input type="radio" name="cpu" value="sempron"/>
+                                </td>
+                                <td>
+                                    <label>1G</label><input type="radio"  name="graphic" value="1G"/>
+                                </td>
+                                <td>
+                                    <label>4G</label><input type="radio" name="memory" value="4G"/>
+                                </td>
+                                <td>
+                                    <label>500G</label><input type="radio" name="disk" value="500G"/>
+                                </td>
+                                <td>
+                                    <label>Win8</label><input type="radio" name="os" value="Win8"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Intel Core i7</label><input type="radio" name="cpu" value="i7"/>
+                                </td>
+                                <td>
+                                    <label>AMD Athlon x2</label><input type="radio" name="cpu" value="Athlon"/>
+                                </td>
+                                <td>
+                                    <label>2G</label><input type="radio"  name="graphic" value="2G"/>
+                                </td>
+                                <td>
+                                    <label>8G</label><input type="radio" name="memory" value="8G"/>
+                                </td>
+                                <td>
+                                    <label>750G</label><input type="radio" name="disk" value="750G"/>
+                                </td>
+                                <td>
+                                    <label>Linux</label><input type="radio" name="os" value="Linux"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Intel Celeron 双核</label><input type="radio" name="cpu" value="Celeron"/>
+                                </td>
+                                <td>
+                                    <label>AMD A4</label><input type="radio" name="cpu" value="A4"/>
+                                </td>
+                                <td>
+                                    <label>高清显卡</label><input type="radio"  name="graphic" value="高清显卡"/>
+                                </td>
+                                <td>
+                                    <label>10G</label><input type="radio" name="memory" value="10G"/>
+                                </td>
+                                <td>
+                                    <label>1TB</label><input type="radio" name="disk" value="1T"/>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Intel Pentium 双核</label><input type="radio" name="cpu" value="Pentium"/>
+                                </td>
+                                <td>
+                                    <label>AMD A6</label><input type="radio" name="cpu" value="A6"/>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <label>2TB</label><input type="radio" name="disk" value="2T"/>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Intel Celeron 四核</label><input type="radio" name="cpu" value="Celeron"/>
+                                </td>
+                                <td>
+                                    <label>AMD A8</label><input type="radio" name="cpu" value="A8"/>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <label>SSD</label><input type="radio" name="disk" value="SSD"/>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Intel Pentium 四核</label><input type="radio" name="cpu" value="Pentium"/>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br/> 
+    <button id="btnSearch" class="uk-button uk-button-small">查询</button>
 </div>
 <h3 class="tm-article-subtitle">查询结果</h3>
 <div class="uk-overflow-container">
@@ -54,31 +200,17 @@
                 <th>名称</th>
                 <th>京东价</th>
                 <th>官方价</th>
-                <th>建议价</th>
+                <th>建议售价</th>
                 <th>CPU</th>
                 <th>显卡</th>
                 <th>内存</th>
                 <th>硬盘</th>
             </tr>
         </thead>
-        <tbody>
-			{{range .List}}
-            <tr>
-            	<td class="btn-erp-detail" itemid="{{.IDStr}}">+</td>
-                <td>{{.Name}}</td>
-                <td>￥{{.JDPrice}}</td>
-                <td>￥{{.Price}}</td>
-                <td>￥{{.SuggestPrice}}</td>
-                <td>{{.CPUModel}}</td>
-                <td>{{.GraphicsModel}}</td>
-                <td>{{.MemorySize}}</td>
-                <td>{{.DiskSize}}</td>
-            </tr>
-			{{end}}
+        <tbody id="erp-list">
         </tbody>
     </table>
 </div>
-{{end}}
 <br/> 
 <a href="/manage/web/erp/scan" class="uk-button uk-button-small">点击录入</a>
 当前共录入<strong>{{.Count}}</strong>条记录
