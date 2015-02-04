@@ -11,11 +11,11 @@ type Computer struct {
 	SKU      string        `bson:"sku" id:"sku" form:"sku,text,第三方商品编号"`
 	ScanSite string        `bson:"scanSite" id:"scanSite" form:"scanSite,text,数据来源网站"`
 
-	PurchasePriceIncludTax  float32 `bson:"purchasePriceIncludTax" id:"purchasePriceIncludTax" form:"purchasePriceIncludTax,text,含税进货价(元)"`
-	PurchasePriceWithoutTax float32 `bson:"purchasePriceWithoutTax" id:"purchasePriceWithoutTax" form:"purchasePriceWithoutTax,text,不含税进货价(元)"`
-	SuggestPrice            float32 `bson:"suggestPrice" id:"suggestPrice" form:"suggestPrice,text,建议零售价(元)"`
-	Price                   float32 `bson:"price" id:"price" form:"price,text,官方售价(元)"`
-	JDPrice                 float32 `bson:"jdPrice" id:"jdPrice" form:"jdPrice,text,京东售价(元)"`
+	PurchasePriceIncludTax  float32 `bson:"purchasePriceIncludTax" id:"purchasePriceIncludTax" form:"purchasePriceIncludTax,number,含税进货价(元)"`
+	PurchasePriceWithoutTax float32 `bson:"purchasePriceWithoutTax" id:"purchasePriceWithoutTax" form:"purchasePriceWithoutTax,number,不含税进货价(元)"`
+	SuggestPrice            float32 `bson:"suggestPrice" id:"suggestPrice" form:"suggestPrice,number,建议零售价(元)"`
+	Price                   float32 `bson:"price" id:"price" form:"price,number,官方售价(元)"`
+	JDPrice                 float32 `bson:"jdPrice" id:"jdPrice" form:"jdPrice,number,京东售价(元)"`
 
 	Name     string `bson:"name" id:"name" form:"name,text,产品名称"`
 	Brand    string `bson:"brand" id:"brand" form:"brand,text,品牌"`

@@ -180,6 +180,14 @@ func ParseJD(url string) (interface{}, error) {
 		for _, section := range matcheSections {
 			matchRows := ptnContentRow.FindAllStringSubmatch(section[0], -1)
 			switch strings.TrimSpace(section[1]) {
+			case "操作系统":
+				for _, row := range matchRows {
+					switch strings.TrimSpace(row[1]) {
+					case "操作系统", "OS":
+						computer.OS = row[2]
+					}
+				}
+
 			case "主体":
 				for _, row := range matchRows {
 					switch strings.TrimSpace(row[1]) {
@@ -193,16 +201,16 @@ func ParseJD(url string) (interface{}, error) {
 						computer.OS = row[2]
 					}
 				}
-			case "CPU":
+			case "CPU", "处理器":
 				for _, row := range matchRows {
 					switch strings.TrimSpace(row[1]) {
-					case "类型":
+					case "类型", "CPU类型":
 						computer.CPUBrand = row[2]
-					case "CPU型号":
+					case "型号", "CPU型号":
 						computer.CPUModel = row[2]
-					case "速度":
+					case "速度", "CPU速度":
 						computer.CPUFrequency = row[2]
-					case "核心数":
+					case "核心数", "核心":
 						computer.CPUCoreNum = row[2]
 					case "二级缓存":
 						computer.CPUSecondCache = row[2]
@@ -213,9 +221,9 @@ func ParseJD(url string) (interface{}, error) {
 			case "显卡":
 				for _, row := range matchRows {
 					switch strings.TrimSpace(row[1]) {
-					case "显卡品牌":
+					case "品牌", "显卡品牌":
 						computer.GraphicsBrand = row[2]
-					case "显卡芯片", "显示芯片":
+					case "芯片", "显卡芯片", "显示芯片":
 						computer.GraphicsModel = row[2]
 					case "显卡容量", "显存容量":
 						computer.GraphicsMemorySize = row[2]
@@ -239,42 +247,42 @@ func ParseJD(url string) (interface{}, error) {
 			case "内存":
 				for _, row := range matchRows {
 					switch strings.TrimSpace(row[1]) {
-					case "容量":
+					case "内存容量", "容量":
 						computer.MemorySize = row[2]
-					case "速度":
+					case "速度", "内存类型":
 						computer.MemoryType = row[2]
 					}
 				}
 			case "硬盘":
 				for _, row := range matchRows {
 					switch strings.TrimSpace(row[1]) {
-					case "容量":
+					case "容量", "硬盘容量":
 						computer.DiskSize = row[2]
-					case "类型":
+					case "类型", "硬盘类型":
 						computer.DiskType = row[2]
-					case "转速":
+					case "转速", "硬盘转速":
 						computer.DiskSpeed = row[2]
 					}
 				}
 			case "光驱":
 				for _, row := range matchRows {
 					switch strings.TrimSpace(row[1]) {
-					case "类型":
+					case "类型", "光驱类型":
 						computer.CDRom = row[2]
 					}
 				}
 			case "输入设备":
 				// None
-			case "规格":
+			case "规格", "机器规格", "电源":
 				for _, row := range matchRows {
 					switch strings.TrimSpace(row[1]) {
-					case "电源":
+					case "电源", "电池":
 						computer.Power = row[2]
 					case "电源功率":
 						computer.Power += " " + row[2]
 					case "尺寸":
 						computer.Size = row[2]
-					case "重量":
+					case "重量", "净重":
 						computer.Weight = row[2]
 					}
 				}
